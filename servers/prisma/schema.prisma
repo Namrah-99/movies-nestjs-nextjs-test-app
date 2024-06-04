@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  Admin
+  User
+}
+
+enum CategoryNameEnum {
+  ACTION
+  HORROR
+  COMEDY
+  ANIMATED
+}
+
+model Avatars {
+  id        String @id @default(cuid())
+  public_id String
+  url       String
+  userId    String @unique
+  user      User   @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  email      String   @unique
+  phone_number Float @unique
+  address    String?
+  password   String
+  avatar     Avatars? @relation
+  role       Role     @default(User)
+  image      String?  @default("https://i.pravatar.cc/100?u=gbyy")
+  dob        DateTime?
+  categories Category[] @relation("UserCategories")
+  ratings    Rating[]
+  recommendedMovies RecommendedMovie[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Category {
+  id     String   @id @default(cuid())
+  name   CategoryNameEnum @unique
+  users  User[]  @relation("UserCategories")
+  movies Movie[]
+}
+
+model Movie {
+  id         String   @id @default(cuid())
+  title      String   @unique
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+  ratings    Rating[]
+  recommendedMovies RecommendedMovie[]
+}
+
+model Rating {
+  id     String   @id @default(cuid())
+  userId String
+  movieId String
+  value    Int      @default(1)
+  user    User     @relation(fields: [userId], references: [id])
+  movie   Movie    @relation(fields: [movieId], references: [id])
+
+  @@unique([userId, movieId])
+}
+
+model RecommendedMovie {
+  id     String   @id @default(cuid())
+  movieId String
+  userId String
+  user    User     @relation(fields: [userId], references: [id])
+  movie   Movie    @relation(fields: [movieId], references: [id])
+
+}

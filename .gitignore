@@ -1,0 +1,8 @@
+node_modules/
+clients/user-ui/node_modules/
+servers/node_modules/
+servers/admin/node_modules/
+servers/gateway/node_modules/
+servers/shared/node_modules/
+servers/users/node_modules/
+.env

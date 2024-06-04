@@ -1,9 +1,14 @@
 "use client";
+
 import { gql, DocumentNode } from "@apollo/client";
 
-export const RATE_MOVIE: DocumentNode = gql`
-  mutation RateMovie($value: Int!, $userId: String!, $movieId: String!) {
-    rateMovieFromUser(userId: $userId, movieId: $movieId, value: $value) {
+export const RATE_MOVIE_FROM_USER: DocumentNode = gql`
+  mutation RateMovieFromUser(
+    $value: Float!
+    $userId: String!
+    $movieId: String!
+  ) {
+    rateMovieFromUser(value: $value, userId: $userId, movieId: $movieId) {
       id
       value
       user {

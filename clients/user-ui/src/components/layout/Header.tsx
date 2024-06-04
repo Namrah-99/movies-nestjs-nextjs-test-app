@@ -16,7 +16,7 @@ function Header() {
   }, [loading, user]);
   return (
     <div>
-      <header className="w-full bg-[#0A0713]">
+      <header className="w-full bg-[#00000027]">
         <div className="w-[90%] m-auto h-[80px] flex items-center justify-between">
           <h1 className={`${styles.logo}`}>
             {user?.name ||

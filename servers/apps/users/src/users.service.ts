@@ -365,6 +365,7 @@ export class UsersService {
       recommendedMovies(userId: $userId) {
         id
         movie {
+          id
           title
           category {
             name
@@ -401,7 +402,7 @@ export class UsersService {
     movieId: string,
   ): Promise<Rating> {
     const query = `
-    mutation RateMovie($value: Int!, $userId: String!, $movieId: String!) {
+    mutation RateMovie($value: Float!, $userId: String!, $movieId: String!) {
       rateMovie(value: $value, userId: $userId, movieId: $movieId) {
         id
         value
@@ -440,13 +441,18 @@ export class UsersService {
 
     const variables = { value, userId, movieId };
 
-    const response = await firstValueFrom(
-      this.httpService.post('http://localhost:5002/graphql', {
-        query,
-        variables,
-      }),
-    );
+    try {
+      const response = await firstValueFrom(
+        this.httpService.post('http://localhost:5002/graphql', {
+          query,
+          variables,
+        }),
+      );
 
-    return response.data.data.rateMovie;
+      return response.data.data.rateMovie;
+    } catch (error) {
+      console.error('Error rating movie:', error.message);
+      throw new Error('Failed to rate movie');
+    }
   }
 }

@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import styles from "@/src/utils/styles";
+import { useMutation } from "@apollo/client";
+import { RATE_MOVIE_FROM_USER } from "@/src/graphql/actions/rate-movie.action";
 
 const formSchema = z.object({
   value: z.number().min(1, "Rate movie (1-5)!").max(5, "Rate movie (1-5)!"),
@@ -19,6 +21,8 @@ const RateMovie = ({
   selectedMovie: any;
   user: any;
 }) => {
+  const [rateMovieFromUser, { loading }] = useMutation(RATE_MOVIE_FROM_USER);
+
   const {
     register,
     handleSubmit,
@@ -29,27 +33,24 @@ const RateMovie = ({
   });
 
   const onSubmit = async (data: RateMovieSchema) => {
-    toast.success(`Rated Movie Successfull! ${data.value}`);
-    reset();
-    // const loginData = {
-    //   email: data.email,
-    //   password: data.password,
-    // };
-    // console.log("loginn");
-    // const response = await Login({
-    //   variables: loginData,
-    // });
-    // console.log("response.data.Login.user : ", response.data.Login.user);
-    // if (response.data.Login.user) {
-    //   toast.success("Login Successfull!");
-    //   Cookies.set("refresh_token", response.data.Login.refreshToken);
-    //   Cookies.set("access_token", response.data.Login.accessToken);
-    //   setOpen(false);
-    //   reset();
-    //   window.location.reload();
-    // } else {
-    //   toast.error(response.data.Login.error.message);
-    // }
+    console.log("Rating movie...", data.value, selectedMovie.id, user.id);
+    try {
+      const response = await rateMovieFromUser({
+        variables: {
+          value: data.value,
+          userId: user.id,
+          movieId: selectedMovie.id,
+        },
+      });
+      console.log("Mutation response:", response.data);
+      toast.success(`Rated Movie Successfull! ${data.value}`);
+      setOpen(false);
+      reset();
+      window.location.reload();
+    } catch (error) {
+      console.error("Error rating movie:", error);
+      // toast.error(error.message);
+    }
   };
 
   const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -92,7 +93,7 @@ const RateMovie = ({
           <div className="w-full flex justify-center mt-5">
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || loading}
               className="my-button-styles m-3"
             >
               Submit

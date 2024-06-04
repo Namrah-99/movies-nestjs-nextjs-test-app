@@ -47,6 +47,13 @@ export class AdminService {
     userId: string,
     movieId: string,
   ): Promise<Rating> {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!existingUser) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+
     const existingRating = await this.prisma.rating.findFirst({
       where: {
         userId,

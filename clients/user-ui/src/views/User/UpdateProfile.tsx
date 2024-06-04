@@ -131,7 +131,7 @@ const UpdateProfile = () => {
         <h1 className={`${styles.title}`}>Update Profile</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
-            <label className="label mt-3">Upload Food image</label>
+            <label className="label mt-3">Upload image</label>
             <div className="w-full">
               <input
                 type="file"

@@ -28,7 +28,6 @@ export class adminResolver {
     @Args('userId') userId: string,
     @Args('movieId') movieId: string,
   ) {
-    console.log(value, userId, movieId, 'admin service');
     return this.adminService.rateMovieByUser(value, userId, movieId);
   }
 }

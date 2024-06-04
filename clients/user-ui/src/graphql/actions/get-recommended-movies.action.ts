@@ -7,6 +7,7 @@ export const GET_RECOMMENDED_MOVIES: DocumentNode = gql`
     recommendedMoviesfromuser(userId: $userId) {
       id
       movie {
+        id
         title
         category {
           name
@@ -25,27 +26,3 @@ export const GET_RECOMMENDED_MOVIES: DocumentNode = gql`
     }
   }
 `;
-
-// export const GET_RECOMMENDED_MOVIES: DocumentNode = gql`
-// query {
-//     recommendedMovies ($userId: String!) {
-//         id
-//         movie {
-//             title
-//             category {
-//                 name
-//             }
-//             ratings {
-//                 value
-//             }
-//         }
-//         user {
-//             id
-//             name
-//             email
-//             image
-//             role
-//         }
-//     }
-//   }
-// `;
